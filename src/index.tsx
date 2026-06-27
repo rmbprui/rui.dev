@@ -1,19 +1,17 @@
-import ReactDOM from 'react-dom/client';
-
-import "./css/styles.css"
+import ReactDOM from "react-dom/client";
 
 // App
-import App from './App';
+import App from "./App";
 
 // Providers
-import MUIProvider from './providers/MUIProvider';
+import MUIProvider from "./providers/MUIProvider";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 
 root.render(
   <MUIProvider>
     <App />
-  </MUIProvider>
+  </MUIProvider>,
 );

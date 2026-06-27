@@ -16,8 +16,8 @@ code {
 .github-link {
   color: #fff;
   text-decoration: none;
-}
 
-.github-link:hover {
-  color: #999;
+  :hover {
+    color: #999;
+  }
 }

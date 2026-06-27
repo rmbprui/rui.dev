@@ -1,7 +1,8 @@
-import { Suspense, useRef, useState } from 'react';
-import { Canvas, MeshProps, useFrame } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
-import { Box } from '@mui/material';
+import { Suspense, useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { PerspectiveCamera, OrbitControls, useGLTF } from "@react-three/drei";
+import { Mesh } from "three";
+import { Box } from "@mui/material";
 
 type SceneProps = {
   model: string;
@@ -16,7 +17,7 @@ const Scene = ({
   maxSpeed = 0.005,
   friction = 0.0001,
 }: SceneProps) => {
-  const ref = useRef<MeshProps>(null);
+  const ref = useRef<Mesh>(null);
 
   const { scene } = useGLTF(model);
 
@@ -26,19 +27,12 @@ const Scene = ({
     velocity += acceleration - friction;
     velocity > maxSpeed && (velocity = maxSpeed);
     velocity <= 0 && (velocity = 0);
-    if (ref.current) ref.current.rotation.y += velocity;
+    if (ref.current?.rotation) ref.current.rotation.y += velocity;
   });
 
   return (
     <>
       <OrbitControls enablePan={false} enableZoom={false} />
-      <pointLight
-        position={[10, 5, 20]}
-        intensity={0.5}
-        distance={100}
-        decay={2}
-      />
-      <ambientLight color="#404040" />
       <mesh ref={ref}>
         <primitive object={scene} />
       </mesh>
@@ -57,8 +51,8 @@ const ToolModel = ({ model }: ToolModelProps) => {
       component="div"
       style={{
         height: 200,
-        userSelect: 'none',
-        cursor: 'grab',
+        userSelect: "none",
+        cursor: "grab",
       }}
       onMouseEnter={(e) => {
         setAcceleration(0);
@@ -67,7 +61,11 @@ const ToolModel = ({ model }: ToolModelProps) => {
         setAcceleration(0.0002);
       }}
     >
-      <Canvas camera={{ position: [0, 5, 12] }}>
+      <Canvas>
+        <ambientLight color="#404040" />
+        <PerspectiveCamera makeDefault position={[0, 5, 20]}>
+          <pointLight decay={0} intensity={0.7} />
+        </PerspectiveCamera>
         <Suspense fallback={null}>
           <Scene model={model} acceleration={acceleration} />
         </Suspense>
